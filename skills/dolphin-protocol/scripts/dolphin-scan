@@ -1,0 +1,193 @@
+#!/usr/bin/env python3
+"""dolphin-scan — deterministic scanners for the Dolphin pod. No LLM.
+
+Exit codes (Impeccable convention): 0 = clean · 2 = findings · 1 = the
+scan itself failed. A failed scan is NEVER a pass: package checks are
+fail-closed (a network error exits 1, not 0).
+
+Usage:
+  dolphin-scan pkg npm <name> | pkg pypi <name>   registry existence
+  dolphin-scan deps <project-dir>                 check all declared deps
+  dolphin-scan slop <path>...                     AI-code slop patterns
+  dolphin-scan secrets <path>...                  credential patterns
+"""
+import json
+import re
+import sys
+import urllib.request
+import urllib.error
+from pathlib import Path
+
+FINDINGS = []
+
+
+def finding(where, rule, detail):
+    FINDINGS.append(f"{where} [{rule}] {detail}")
+
+
+# ---------------- package existence (anti-slopsquatting) ----------------
+
+def pkg_exists(ecosystem, name):
+    """True = exists · False = registry says no · None = could not check."""
+    if ecosystem == "npm":
+        url = "https://registry.npmjs.org/" + urllib.parse.quote(name, safe="@/")
+    elif ecosystem == "pypi":
+        url = f"https://pypi.org/pypi/{urllib.parse.quote(name)}/json"
+    else:
+        return None
+    req = urllib.request.Request(url, headers={"User-Agent": "dolphin-scan"})
+    try:
+        with urllib.request.urlopen(req, timeout=15) as resp:
+            return resp.status == 200
+    except urllib.error.HTTPError as e:
+        return False if e.code == 404 else None
+    except Exception:
+        return None
+
+
+def cmd_pkg(ecosystem, name):
+    exists = pkg_exists(ecosystem, name)
+    if exists is None:
+        print(f"dolphin-scan: could not verify {ecosystem}:{name} (network/registry error) — fail-closed", file=sys.stderr)
+        return 1
+    if not exists:
+        finding(f"{ecosystem}:{name}", "package-existence",
+                "not found in the official registry — hallucinated or mistyped name; do NOT install")
+        return 2
+    print(f"ok: {ecosystem}:{name} exists")
+    return 0
+
+
+def cmd_deps(project):
+    project = Path(project)
+    rc = 0
+    checked = 0
+    pkg_json = project / "package.json"
+    if pkg_json.exists():
+        try:
+            data = json.loads(pkg_json.read_text())
+        except Exception as e:
+            print(f"dolphin-scan: cannot parse package.json: {e}", file=sys.stderr)
+            return 1
+        names = list(data.get("dependencies", {})) + list(data.get("devDependencies", {}))
+        for name in names:
+            checked += 1
+            r = cmd_pkg("npm", name)
+            if r == 1:
+                return 1
+            rc = max(rc, r)
+    req = project / "requirements.txt"
+    if req.exists():
+        for line in req.read_text().splitlines():
+            line = line.strip()
+            if not line or line.startswith("#"):
+                continue
+            name = re.split(r"[<>=!~;\[]", line)[0].strip()
+            if not name:
+                continue
+            checked += 1
+            r = cmd_pkg("pypi", name)
+            if r == 1:
+                return 1
+            rc = max(rc, r)
+    if checked == 0:
+        print("dolphin-scan: no package.json / requirements.txt deps found", file=sys.stderr)
+        return 1
+    return rc
+
+
+# ---------------- slop & secrets patterns ----------------
+
+SLOP_RULES = [
+    ("banner-comment",
+     re.compile(r"^\s*(//|#|/\*|\*)\s*(={4,}|-{4,}|\+{4,}|\*{4,})"),
+     "banner divider comment — extract a named unit instead of decorating sections"),
+    ("empty-catch",
+     re.compile(r"catch\s*(\([^)]*\))?\s*\{\s*\}"),
+     "empty catch block — the error is swallowed"),
+    ("except-pass",
+     re.compile(r"except[^:\n]*:\s*\n\s+pass\b|except\s*:\s*pass\b"),
+     "except: pass — the error is swallowed"),
+    ("as-any",
+     re.compile(r"\bas any\b"),
+     "type escape 'as any' — the compiler was silenced, not satisfied"),
+    ("bare-todo",
+     re.compile(r"\bTODO\b(?!\s*\([^)]+\))"),
+     "TODO without owner/trigger — write TODO(owner-or-ticket)"),
+    ("commented-out-code",
+     re.compile(r"^\s*//\s*(if|for|while|return|const|let|var|function|import|await)\b"),
+     "commented-out code — delete it; git remembers"),
+]
+
+SECRET_RULES = [
+    ("aws-key", re.compile(r"AKIA[0-9A-Z]{16}"), "AWS access key id in source"),
+    ("github-token", re.compile(r"ghp_[A-Za-z0-9]{36}"), "GitHub personal token in source"),
+    ("openai-key", re.compile(r"sk-[A-Za-z0-9]{20,}"), "API key (sk-…) in source"),
+    ("private-key", re.compile(r"BEGIN (RSA |OPENSSH |EC )?PRIVATE KEY"), "private key material in source"),
+    ("hardcoded-secret",
+     re.compile(r"(?i)(api[_-]?key|secret|password)\s*[:=]\s*['\"][^'\"]{8,}['\"]"),
+     "hardcoded credential literal — move to env/secret store"),
+]
+
+SKIP_DIRS = {".git", "node_modules", ".dolphin", "__pycache__", "dist", "build"}
+PLACEHOLDER = re.compile(r"(?i)example|placeholder|changeme|your[-_]|xxxx|\.\.\.")
+
+
+def iter_files(paths):
+    for p in paths:
+        p = Path(p)
+        if p.is_dir():
+            for f in sorted(p.rglob("*")):
+                if f.is_file() and not any(part in SKIP_DIRS for part in f.parts):
+                    yield f
+        elif p.is_file():
+            yield p
+
+
+def scan_with(rules, paths, kind):
+    for f in iter_files(paths):
+        try:
+            text = f.read_text(errors="ignore")
+        except Exception as e:
+            print(f"dolphin-scan: cannot read {f}: {e}", file=sys.stderr)
+            return 1
+        for i, line in enumerate(text.splitlines(), 1):
+            for rule, rx, detail in rules:
+                if rx.search(line):
+                    if rule == "hardcoded-secret" and PLACEHOLDER.search(line):
+                        continue
+                    finding(f"{f}:{i}", rule, detail)
+        if kind == "slop":  # multi-line rules
+            for rule, rx, detail in rules:
+                if rule == "except-pass":
+                    for m in rx.finditer(text):
+                        ln = text[: m.start()].count("\n") + 1
+                        finding(f"{f}:{ln}", rule, detail)
+    return 2 if FINDINGS else 0
+
+
+def main(argv):
+    if len(argv) < 2:
+        print(__doc__)
+        return 1
+    cmd = argv[1]
+    if cmd == "pkg" and len(argv) == 4:
+        rc = cmd_pkg(argv[2], argv[3])
+    elif cmd == "deps" and len(argv) == 3:
+        rc = cmd_deps(argv[2])
+    elif cmd == "slop" and len(argv) >= 3:
+        rc = scan_with(SLOP_RULES, argv[2:], "slop")
+    elif cmd == "secrets" and len(argv) >= 3:
+        rc = scan_with(SECRET_RULES, argv[2:], "secrets")
+    else:
+        print(__doc__)
+        return 1
+    for f in FINDINGS:
+        print("FINDING:", f)
+    if rc == 2:
+        print(f"dolphin-scan: {len(FINDINGS)} finding(s)", file=sys.stderr)
+    return rc
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv))

@@ -1,0 +1,5 @@
+* text=auto eol=lf
+*.sh text eol=lf
+dolphin-say text eol=lf
+dolphin-scan text eol=lf
+dolphin-metrics text eol=lf

@@ -1,0 +1,79 @@
+#!/usr/bin/env python3
+"""dolphin-metrics — outcome metrics computed from git, for outcomes.md.
+
+Computable from git alone: commit volume, revert rate, 14-day churn.
+Escaped defects and judge agreement are NOT in git — they stay manual
+entries in outcomes.md (this script says so rather than inventing them).
+
+Usage: dolphin-metrics [project-dir] [--days 30]
+"""
+import subprocess
+import sys
+from collections import Counter
+from datetime import datetime, timedelta, timezone
+from pathlib import Path
+
+
+def git(project, *args):
+    return subprocess.run(
+        ["git", "-C", str(project), *args],
+        capture_output=True, text=True, check=True,
+    ).stdout
+
+
+def main():
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    project = Path(args[0]) if args else Path.cwd()
+    days = 30
+    if "--days" in sys.argv:
+        days = int(sys.argv[sys.argv.index("--days") + 1])
+    since = datetime.now(timezone.utc) - timedelta(days=days)
+    since_iso = since.strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    log = git(project, "log", f"--since={since_iso}", "--format=%H%x09%s%x09%aI")
+    commits = [ln.split("\t") for ln in log.strip().splitlines() if ln.strip()]
+    reverts = [c for c in commits if c[1].lower().startswith("revert")]
+
+    # churn: files touched by 2+ commits inside any 14-day span of the window
+    files = git(project, "log", f"--since={since_iso}", "--name-only",
+                "--format=commit %aI").splitlines()
+    touches = []
+    current_date = None
+    for ln in files:
+        if ln.startswith("commit "):
+            current_date = datetime.fromisoformat(ln[7:])
+        elif ln.strip() and current_date is not None:
+            touches.append((ln.strip(), current_date))
+    churned = set()
+    by_file = {}
+    for f, d in touches:
+        by_file.setdefault(f, []).append(d)
+    for f, ds in by_file.items():
+        ds.sort()
+        for i in range(len(ds)):
+            for j in range(i + 1, len(ds)):
+                if (ds[j] - ds[i]).days <= 14:
+                    churned.add(f)
+                    break
+            if f in churned:
+                break
+    total_files = len(by_file)
+    churn_pct = (100.0 * len(churned) / total_files) if total_files else 0.0
+    revert_pct = (100.0 * len(reverts) / len(commits)) if commits else 0.0
+
+    print(f"## Outcome metrics — last {days} days (computed {datetime.now():%Y-%m-%d})")
+    print()
+    print(f"| Metric | Value |")
+    print(f"|---|---|")
+    print(f"| Commits | {len(commits)} |")
+    print(f"| Reverts | {len(reverts)} ({revert_pct:.1f}% of commits) |")
+    print(f"| Files touched | {total_files} |")
+    print(f"| Files churned (re-touched within 14d) | {len(churned)} ({churn_pct:.1f}%) |")
+    print(f"| Escaped defects | _(manual — count post-PASS defects in outcomes.md)_ |")
+    print(f"| Judge agreement (kappa) | _(manual — from calibration runs)_ |")
+    c = Counter()
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

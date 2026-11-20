@@ -1,0 +1,107 @@
+#!/usr/bin/env bash
+# dolphin-say — the ONLY way to put a signal on the board. Enforces the
+# closed vocabulary, the one-line format, roster-only authorship, and
+# (v3) mechanical claim leases.
+#
+#   dolphin-say <from> @<target|all> <VERB> <object> -- <one-line note>
+#
+# Board line written:
+#   @target VERB object | note [from:<from> YYYY-MM-DD HH:MM]
+#
+# Board discovery: $DOLPHIN_PROJECT, else the MAIN checkout resolved via
+# `git rev-parse --git-common-dir` (works from linked worktrees), else a
+# walk up from $PWD.
+#
+# Claims: CLAIM takes a lease in .dolphin/claims.tsv (TTL
+# $DOLPHIN_CLAIM_TTL, default 3600s). An overlapping unexpired claim by
+# another session is a HARD REJECT (exit 3). Re-claiming your own target
+# renews the lease (heartbeat). RELEASE drops your lease. Expired leases
+# are reaped on every invocation.
+#
+# Exit codes: 0 sent · 1 no board · 2 usage/unknown verb/unregistered ·
+# 3 claim conflict.
+set -eu
+
+usage() {
+  echo "usage: dolphin-say <from> @<target|all> <VERB> <object> -- <note...>" >&2
+  echo "verbs: TASK HANDOFF CLAIM RELEASE REVIEW DONE BLOCKED ACK NOTE" >&2
+  exit 2
+}
+
+[ $# -ge 6 ] || usage
+FROM="$1"; TARGET="$2"; VERB="$3"; OBJECT="$4"; SEP="$5"; shift 5; NOTE="$*"
+[ "$SEP" = "--" ] || usage
+case "$TARGET" in @*) ;; *) usage ;; esac
+case "$VERB" in
+  TASK|HANDOFF|CLAIM|RELEASE|REVIEW|DONE|BLOCKED|ACK|NOTE) ;;
+  *) echo "dolphin-say: unknown verb '$VERB' — the vocabulary is closed" >&2; exit 2 ;;
+esac
+
+# --- locate the pod root (the directory that holds .dolphin/) ---
+POD=""
+if [ -n "${DOLPHIN_PROJECT:-}" ]; then
+  POD="$DOLPHIN_PROJECT"
+elif git rev-parse --git-common-dir >/dev/null 2>&1; then
+  COMMON="$(git rev-parse --git-common-dir)"
+  case "$COMMON" in /*) ;; *) COMMON="$PWD/$COMMON" ;; esac
+  CAND="$(dirname "$COMMON")"
+  [ -f "$CAND/.dolphin/board.md" ] && POD="$CAND"
+fi
+if [ -z "$POD" ]; then
+  DIR="$PWD"
+  while [ "$DIR" != "/" ]; do
+    [ -f "$DIR/.dolphin/board.md" ] && { POD="$DIR"; break; }
+    DIR="$(dirname "$DIR")"
+  done
+fi
+[ -n "$POD" ] || { echo "dolphin-say: no .dolphin/board.md found (run dolphin-init.sh in the main checkout)" >&2; exit 1; }
+BOARD="$POD/.dolphin/board.md"
+AGENTS="$POD/.dolphin/agents.md"
+CLAIMS="$POD/.dolphin/claims.tsv"
+
+# --- roster-only authorship: FROM must be a registered tag ---
+if [ -f "$AGENTS" ] && ! grep -q "^| $FROM |" "$AGENTS"; then
+  echo "dolphin-say: '$FROM' is not a registered tag in agents.md — register first (dolphin-init.sh --register)" >&2
+  exit 2
+fi
+
+NOW="$(date +%s)"
+TTL="${DOLPHIN_CLAIM_TTL:-3600}"
+touch "$CLAIMS"
+
+# --- reap expired leases ---
+TMP="$(mktemp)"
+awk -F'\t' -v now="$NOW" '$3 > now' "$CLAIMS" > "$TMP" || true
+mv "$TMP" "$CLAIMS"
+
+overlap() { # $1,$2 = targets; overlap if equal or one is a path-prefix of the other
+  [ "$1" = "$2" ] && return 0
+  case "$2" in "$1"/*) return 0 ;; esac
+  case "$1" in "$2"/*) return 0 ;; esac
+  return 1
+}
+
+if [ "$VERB" = "CLAIM" ]; then
+  while IFS="$(printf '\t')" read -r t owner exp; do
+    [ -n "${t:-}" ] || continue
+    if [ "$owner" != "$FROM" ] && overlap "$t" "$OBJECT"; then
+      echo "dolphin-say: CLAIM rejected — '$t' is held by $owner until $(date -d "@$exp" '+%H:%M' 2>/dev/null || echo "$exp")" >&2
+      exit 3
+    fi
+  done < "$CLAIMS"
+  # renew own lease if present, else add
+  TMP="$(mktemp)"
+  awk -F'\t' -v t="$OBJECT" -v o="$FROM" '!($1==t && $2==o)' "$CLAIMS" > "$TMP" || true
+  printf '%s\t%s\t%s\n' "$OBJECT" "$FROM" "$((NOW + TTL))" >> "$TMP"
+  mv "$TMP" "$CLAIMS"
+fi
+
+if [ "$VERB" = "RELEASE" ]; then
+  TMP="$(mktemp)"
+  awk -F'\t' -v t="$OBJECT" -v o="$FROM" '!($2==o && ($1==t || index($1, t"/")==1 || index(t, $1"/")==1))' "$CLAIMS" > "$TMP" || true
+  mv "$TMP" "$CLAIMS"
+fi
+
+TS="$(date '+%Y-%m-%d %H:%M')"
+echo "$TARGET $VERB $OBJECT | $NOTE [from:$FROM $TS]" >> "$BOARD"
+echo "sent: $TARGET $VERB $OBJECT"
