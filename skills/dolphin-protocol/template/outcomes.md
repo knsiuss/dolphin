@@ -21,8 +21,8 @@ depth only; it never exempts anyone from a gate.
 | Judge false-positive rate | — | measured on the calibration set |
 | 0–100 trend (dashboard only, never a gate) | — | |
 
-## Per-session outcomes
+## Per-role outcomes
 
-| Tag | Tasks done | Escapes traced | Reverts traced | Notes |
+| Role | Tasks done | Escapes traced | Reverts traced | Notes |
 |---|---|---|---|---|
 | | | | | |

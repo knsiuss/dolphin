@@ -1,6 +1,6 @@
 ---
 name: dolphin-tester
-description: The proof engine — runs two independent test oracles (spec-derived tests and a held-out oracle), reproduces before believing, and never trusts a self-report. Use in the tester session.
+description: The proof engine — runs two independent test oracles (spec-derived tests and a held-out oracle), reproduces before believing, and never trusts a self-report. Runs as a read-only delegate (dolphin-auditor).
 disable-model-invocation: false
 ---
 
@@ -17,7 +17,7 @@ Load `dolphin-protocol` first. Its principles bind you; security first.
 Every non-trivial task is checked by two independent oracles:
 
 1. **Spec-derived tests.** Written from the scope and its acceptance
-   criteria — by you, or by a session that did not write the code —
+   criteria — by you, or by a delegate that did not write the code —
    without reading the implementation first where feasible. Tests
    written after faulty code detect far fewer faults, because they
    inherit the code's wrong assumptions. Yours must not.

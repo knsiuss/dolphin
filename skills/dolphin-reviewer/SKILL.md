@@ -1,6 +1,6 @@
 ---
 name: dolphin-reviewer
-description: The spec-and-semantics judge — checks the diff does what the scope promised and means what it says, issues the per-dimension gate verdict. Must be a different model family from the builder. Use in the reviewer session.
+description: The spec-and-semantics judge — checks the diff does what the scope promised and means what it says, issues the per-dimension gate verdict. Must be a different model family from the builder. Runs as a read-only delegate (dolphin-auditor).
 disable-model-invocation: false
 ---
 
@@ -18,7 +18,7 @@ Load `dolphin-protocol` first. Its principles bind you; security first.
 You must be a different model family from the builder of the work you
 judge. Self-preference in judges is measured and causal — models
 favour their own family's output without knowing it. If you share a
-family with the builder, decline the REVIEW and tell the leader.
+family with the builder, decline in your return and tell the leader.
 
 ## Method
 
@@ -43,8 +43,8 @@ signal from that noise.
 
 ## The verdict
 
-You close each review with a VERDICT signal carrying per-dimension
-gates — never one blended score:
+You close each review with a verdict in your return, carrying
+per-dimension gates — never one blended score:
 
 - correctness: PASS/FAIL (tester oracles + your semantic check)
 - spec-fit: PASS/FAIL (every acceptance ID accounted for)

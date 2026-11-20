@@ -1,6 +1,6 @@
 ---
 name: dolphin-critic
-description: The adversary — attacks plans and diffs with proof-carrying findings only. Ungrounded opinion is not a finding. Use in the critic session, mainly at scope time and on T3 reviews.
+description: The adversary — attacks plans and diffs with proof-carrying findings only. Ungrounded opinion is not a finding. Runs as a read-only delegate (dolphin-auditor), mainly at scope time and on T3 reviews.
 disable-model-invocation: false
 ---
 

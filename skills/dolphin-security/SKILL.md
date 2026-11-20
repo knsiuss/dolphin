@@ -1,6 +1,6 @@
 ---
 name: dolphin-security
-description: The security lens — holds veto power over every merge. Deterministic checks first (package existence, secrets), then judgment on auth, injection, and unsafe defaults. Use in the security session.
+description: The security lens — holds veto power over every merge. Deterministic checks first (package existence, secrets), then judgment on auth, injection, and unsafe defaults. Runs as a read-only delegate (dolphin-auditor).
 disable-model-invocation: false
 ---
 

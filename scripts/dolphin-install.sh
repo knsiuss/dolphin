@@ -3,7 +3,8 @@
 # skill directory. The skills are standard Agent Skills (a folder with
 # SKILL.md: name + description frontmatter), so the same files serve
 # Claude Code, OpenCode, Codex and Cursor unchanged. Only the target
-# directory and the pod's start command differ per harness.
+# directory differs per harness. v4 has no pod to start: the main
+# session is the runtime, delegates are subagents.
 #
 # Usage:
 #   dolphin-install.sh <harness> [project-dir] [--global]
@@ -50,18 +51,26 @@ if [ "$GLOBAL" -eq 1 ]; then DEST="$GLOB"; else DEST="$PROJECT/$SUB"; fi
 mkdir -p "$DEST"
 
 count=0
-for skill in "$SRC"/dolphin-*/; do
+for skill in "$SRC"/*/; do
   name="$(basename "$skill")"
   rm -rf "${DEST:?}/$name"
   cp -r "$skill" "$DEST/$name"
   count=$((count + 1))
 done
 
+# Agent definitions: Claude Code reads .claude/agents/. Other
+# harnesses adapt the same two files to their subagent format;
+# they are copied alongside the skills either way so nothing is lost.
+AGENTS_SRC="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/agents"
+if [ "$HARNESS" = "claude" ] && [ -d "$AGENTS_SRC" ]; then
+  if [ "$GLOBAL" -eq 1 ]; then ADEST="$HOME/.claude/agents"; else ADEST="$PROJECT/.claude/agents"; fi
+  mkdir -p "$ADEST"
+  cp "$AGENTS_SRC"/*.md "$ADEST/"
+  echo "dolphin: agent definitions installed -> $ADEST"
+fi
+
 echo "dolphin: $count skills installed -> $DEST"
 echo "next steps:"
 echo "  1. in the MAIN checkout, run dolphin-init.sh from the installed"
-echo "     dolphin-protocol skill's scripts/ folder, then register each"
-echo "     agent with: .dolphin/bin/dolphin-init.sh --register <tag> <Role> \"<terminal>\""
-echo "  2. start the pod with this harness:"
-echo "       DOLPHIN_CMD=$CMD .dolphin/bin/dolphin-pod.sh up <project>"
-echo "  3. tell each session its name + role skill; load dolphin-protocol first"
+echo "     dolphin-protocol skill's scripts/ folder (scaffolds .dolphin/)"
+echo "  2. in your main session, type: /dolphin <the task>"

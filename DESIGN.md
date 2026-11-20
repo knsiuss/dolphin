@@ -269,13 +269,42 @@ the public antislop rulebook (miqdadbadjuber/anti-slop, MIT) and
 rewritten from Dolphin's own evidence — no text or rule wording
 was taken from it.
 
+## v4 — the pod moves into the harness (21 Nov 2026)
+
+Field report that forced this version: run inside a GUI harness,
+the v3 pod silently lost its nervous system. Sessions worked
+entirely through the shell — the skills framed every tool as a
+script and never named the harness's file tools — and finished
+work never reached the main chat, because the secretary that
+carried signals only exists inside the tmux launcher. Without
+Dolphin loaded, the same harness wrote files directly, with
+diffs. The setup was the bug, twice over.
+
+The fix follows the architecture the mature packs converged on
+(studied from Poteto's pstack and obra/superpowers, both MIT,
+architecture only): the harness is the runtime; the main session
+is the orchestrator; roles are skills plus two subagent
+definitions; a delegate's return IS the message, delivered by the
+harness itself. Deleted: the board, the signal vocabulary as
+transport, claim leases, the secretary, the tmux launcher, the
+registry. Kept, because they were never the problem: the scope
+gate, the per-dimension verdicts, the two oracles, the
+deterministic scanner, the calibration set, outcome-based
+reputation, the design filter with its carrier gate, and the
+file-tool discipline (files are written with file tools; the
+shell only runs things). The front door is now one command —
+`/dolphin` — a user-invoked router in the main session, on the
+pstack pattern of a single entry skill that routes to the rest.
+
 ## Layout
 
 ```
 dolphin/
-  DESIGN.md  README.md
-  skills/    dolphin-protocol + 10 role skills + dolphin-design
-  template/  .dolphin/ skeleton (board, agents, outcomes, memory,
-             calibration, archive)
-  scripts/   dolphin-init.sh, dolphin-say, dolphin-secretary.sh
+  DESIGN.md  README.md  INSTALL.md
+  skills/    dolphin (router) + dolphin-protocol + dolphin-leader
+             + 10 role skills (incl. dolphin-design)
+  agents/    dolphin-agent (builders) · dolphin-auditor (read-only
+             lenses)
+  scripts/   dolphin-install.sh (manual installer)
+  tests/     smoke.sh — structure, agent defs, init, scans
 ```

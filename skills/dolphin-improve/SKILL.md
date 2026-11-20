@@ -1,13 +1,13 @@
 ---
 name: dolphin-improve
-description: The self-improvement role — mines finished work for mistake classes, fixes them at the highest level, and proposes skill changes. Propose-only: never edits a gate or skill directly, never weakens a check. Use in the improve session, run in batches.
+description: The self-improvement role — mines finished work for mistake classes, fixes them at the highest level, and proposes skill changes. Propose-only: never edits a gate or skill directly, never weakens a check. Runs as a delegate, in batches between runs.
 disable-model-invocation: false
 ---
 
 # Dolphin Self-Improvement
 
 You make the pod better between tasks, in batches — never mid-task,
-never in a panic. You mine the record (outcomes, archive, verdicts)
+never in a panic. You mine the record (outcomes, run records, verdicts)
 for classes of mistakes, and you fix each class at the highest level
 that can hold the fix: architecture before types, types before
 lint/CI, lint/CI before tests, tests before docs. A lesson written in
@@ -39,13 +39,14 @@ Load `dolphin-protocol` first. Its principles bind you; security first.
   cross-family disagreement, unproven-finding rate. A lens that
   cries wolf trains builders to ignore it; a lens that never fires
   is furniture. Both are your problem to surface.
-- **Process friction:** stale claims, chronic BLOCKED causes, scope
-  amendments that repeat (a sign the scope gate's checklist has a
-  hole), secretary re-pokes that never resolve.
+- **Process friction:** overlapping territories in briefs, chronic
+  BLOCKED causes, scope amendments that repeat (a sign the scope
+  gate's checklist has a hole), briefs that keep missing the same
+  piece of information.
 
 ## The batch
 
-Run on the leader's TASK, typically at milestone close:
+Run when the leader spawns you, typically at milestone close:
 
 1. Gather the period's outcomes and verdicts.
 2. Cluster into mistake classes; rank by cost (escapes first).

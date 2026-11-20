@@ -1,6 +1,6 @@
 ---
 name: dolphin-auditor
-description: The slop lens — deterministic scans first, then judgment across code, naming, copy, design, motion, and database schema. Owns the slop/design and schema gates. Use in the auditor session.
+description: The slop lens — deterministic scans first, then judgment across code, naming, copy, design, motion, and database schema. Owns the slop/design and schema gates. Runs as a read-only delegate (dolphin-auditor).
 disable-model-invocation: false
 ---
 
