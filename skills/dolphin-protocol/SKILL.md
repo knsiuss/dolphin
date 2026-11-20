@@ -1,6 +1,6 @@
 ---
 name: dolphin-protocol
-description: The Dolphin CORE — identity, the numbered rules (D-01..D-12), file discipline, durable state, and the Return Gate. Every other Dolphin skill is a satellite of this file: it references these rules by number and never duplicates or renumbers them. Load first, before any role skill.
+description: "The Dolphin CORE — identity, the numbered rules (D-01..D-12), file discipline, durable state, and the Return Gate. Every other Dolphin skill is a satellite of this file: it references these rules by number and never duplicates or renumbers them. Load first, before any role skill."
 disable-model-invocation: false
 ---
 
@@ -51,14 +51,18 @@ restate them. If a role skill and this core disagree, the core wins.
   state — are read and changed ONLY with the harness's dedicated
   file tools (read / write / edit) whenever it provides them. The
   shell is for RUNNING things: builds, tests, git, and the pod's
-  deterministic tools (`dolphin-scan`, `dolphin-metrics`). NEVER
-  write or edit a file through the shell — no `Set-Content`,
-  `Out-File`, `echo >`, `cat >`, heredocs, or inline script
-  writers. Shell-written files bypass review diffs, break on
-  quoting and encoding, and are a defect even when the content is
-  right. If your harness gives you no file tools at all, name
-  that gap in your return (BLOCKED) instead of silently falling
-  back to shell writes.
+  deterministic tools (`dolphin-scan`, `dolphin-metrics`). A
+  command whose documented job is to generate or update files —
+  a build, a migration, a formatter, codegen — is running, not
+  shell-writing; its changes enter the diff and are reviewed like
+  any other. What is banned is AUTHORING content through the
+  shell. NEVER write or edit a file through the shell — no
+  `Set-Content`, `Out-File`, `echo >`, `cat >`, heredocs, or
+  inline script writers. Shell-written files bypass review diffs,
+  break on quoting and encoding, and are a defect even when the
+  content is right. If your harness gives you no file tools at
+  all, name that gap in your return (BLOCKED) instead of silently
+  falling back to shell writes.
 - **D-09 A builder never judges its own work.** Every build is
   checked by a lens that didn't build it; the reviewer must be a
   different model family from the builder.

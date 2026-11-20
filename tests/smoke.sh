@@ -2,8 +2,9 @@
 # Dolphin v4 smoke test — the pack's regression test.
 # Run after ANY change to skills/, agents/, or scripts/. Proves:
 # pack structure (router + 13 skills, ≤250 lines each, frontmatter
-# names match) · agent definitions (auditor is read-only) · no dead
-# v3 transport referenced anywhere in skills/agents · init scaffolds
+# names match, frontmatter parses as valid YAML) · agent definitions
+# (auditor is read-only) · no dead v3 transport referenced anywhere
+# in skills/agents · init scaffolds
 # state only (no board) · deterministic scans (red on fixtures,
 # green on clean, package existence fail-closed).
 set -u
@@ -33,6 +34,30 @@ for f in "$PACK"/skills/*/SKILL.md; do
   grep -q "^name: $d\$" "$f" || MISMATCH=1
 done
 if [ "$MISMATCH" -eq 0 ]; then ok "frontmatter name matches folder for all skills"; else bad "frontmatter name matches folder"; fi
+
+# Frontmatter must parse as YAML. An unquoted ": " inside a
+# description makes installers SKIP the skill silently — in
+# v4.1/v4.1.1 the CORE itself failed this, so clean installs got
+# no core at all. Caught by an outside review, now mechanical.
+if python3 -c 'import yaml' >/dev/null 2>&1; then
+  BADFM=$(python3 - "$PACK" <<'PYEOF'
+import re, sys, glob, yaml
+bad = []
+for f in glob.glob(sys.argv[1] + '/skills/*/SKILL.md') + glob.glob(sys.argv[1] + '/agents/*.md'):
+    m = re.match(r'^---\n(.*?)\n---', open(f).read(), re.S)
+    try:
+        d = yaml.safe_load(m.group(1)) if m else None
+        if not isinstance(d, dict) or 'name' not in d:
+            bad.append(f)
+    except Exception:
+        bad.append(f)
+print('\n'.join(bad))
+PYEOF
+)
+  if [ -z "$BADFM" ]; then ok "all frontmatter parses as YAML"; else bad "all frontmatter parses as YAML ($BADFM)"; fi
+else
+  echo "skip - frontmatter YAML check (python3+yaml unavailable)"
+fi
 
 if grep -q "disable-model-invocation: true" "$PACK/skills/dolphin/SKILL.md" \
    && grep -q "dolphin-leader" "$PACK/skills/dolphin/SKILL.md"; then

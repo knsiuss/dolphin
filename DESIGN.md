@@ -333,6 +333,22 @@ disjoint. The recurring shapes survive as examples, demoted from
 menu to illustration. Fixed counts were a mode; the invariants
 are the law.
 
+### v4.1.2 — the core must parse (21 Nov 2026)
+
+An outside review of a real install found the worst bug the pack
+has shipped: the frontmatter `description` of dolphin-protocol
+(the core) and dolphin-improve contained an unquoted ": ", which
+is invalid YAML — installers skipped both skills silently. A
+clean install therefore received NO CORE AT ALL; updaters kept
+running the stale core while believing they had updated. Fixes:
+both descriptions quoted; `package.json` (which still described
+the deleted v1 board pod at version 1.0.0) synced to 4.1.2 with a
+current description; D-08 clarified so tool-generated changes
+(builds, migrations, formatters, codegen) count as running, not
+shell-writing — only authoring content through the shell is
+banned. And the smoke test now parses every frontmatter as YAML,
+so this class of bug can never ship again unnoticed.
+
 ## Layout
 
 ```
