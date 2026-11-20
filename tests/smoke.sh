@@ -70,6 +70,14 @@ for j in dolphin-auditor dolphin-critic dolphin-reviewer; do
 done
 if [ "$AUTH_OK" -eq 1 ]; then ok "authoring lenses can write, pure judges cannot"; else bad "authoring lenses can write, pure judges cannot"; fi
 
+# The capability probe is load-bearing: harnesses differ in what
+# spawned delegates can do, and the pod must compose for the
+# capability it actually has (full / lens-only / solo).
+if grep -q "Probe before you trust the pod" "$PACK/skills/dolphin/SKILL.md" \
+   && grep -q "Lens-only" "$PACK/skills/dolphin-leader/SKILL.md"; then
+  ok "capability probe + lens-only mode present"
+else bad "capability probe + lens-only mode present"; fi
+
 if grep -q "disable-model-invocation: true" "$PACK/skills/dolphin/SKILL.md" \
    && grep -q "dolphin-leader" "$PACK/skills/dolphin/SKILL.md"; then
   ok "router /dolphin is user-invoked and loads the leader"

@@ -365,6 +365,25 @@ fixtures, never the code under test; security writes only PoCs
 under `.dolphin/evidence/`, never product code. The smoke test
 pins both halves of the split.
 
+### v4.1.4 — probe the harness before composing (21 Nov 2026)
+
+Live evidence from the owner's other harness settled the deeper
+question: there, spawned delegates receive NO file-write tool at
+all, whatever their role — two probes, two roles, both
+"NO WRITE TOOL". The pod leader probed, declared the pod unable
+to build, and fell back to building in the main session with
+named hats. That improvisation is now protocol. The router gains
+a mandatory probe step — one throwaway delegate that reads,
+writes a scratch file in the REAL project path (which also
+surfaces workspace-root and path problems before wave 1, not
+during wave 2), and runs a shell command — and the run composes
+for the measured capability: **full pod** when delegates can
+write, **lens-only** when they can only judge (leader builds with
+named hats, delegates verdict, D-09 intact because the judges are
+still separate sessions), **solo** when there is no delegate
+mechanism worth the name. Capability is recorded per project +
+harness and re-probed when either changes.
+
 ## Layout
 
 ```

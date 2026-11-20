@@ -30,17 +30,36 @@ allowed-tools: Read, Glob, Grep, Bash, Task
    small tasks get a chat-sized scope (goal, acceptance criteria
    with IDs, non-goals), real builds get a scope file in
    `.dolphin/scopes/`.
-3. **Compose the pod** (below). There is no fixed team size:
+3. **Probe before you trust the pod.** Spawn ONE throwaway
+   delegate whose whole brief is: read a file in the project,
+   write a scratch file at `<project>/.dolphin/probe.txt` — in
+   the REAL project path, so workspace-root and path problems
+   surface now, not mid-wave — run one trivial shell command,
+   and return the three results verbatim. Record the outcome in
+   `.dolphin/` and reuse it for this project and harness;
+   re-probe when either changes. Compose for the capability you
+   actually have:
+   - **Full pod** — delegates read, write, and run: compose as
+     below.
+   - **Lens-only** — delegates read (and maybe run) but cannot
+     write: YOU build in this session, announcing each hat
+     switch, and delegates judge the diffs as read-only lenses.
+     The builder still never judges (D-09) — the judges are
+     separate sessions; they simply cannot hold the pen.
+   - **Solo** — no usable delegate mechanism: run the roles
+     sequentially yourself, hats named, and say so plainly.
+     Never fake a pod that isn't running.
+4. **Compose the pod** (below). There is no fixed team size:
    the decomposition of the work decides how many delegates
    spawn, and when.
-4. **Spawn delegates** through the harness's native subagent
+5. **Spawn delegates** through the harness's native subagent
    mechanism, using the `dolphin-agent` / `dolphin-auditor`
    definitions and a written brief per delegate (anatomy in
    `dolphin-leader`).
-5. **Route every return through review** at the tier the leader
+6. **Route every return through review** at the tier the leader
    assigns. A builder's DONE is a claim, not a result, until a
    lens has checked it (D-09).
-6. **Report once to the human**: what shipped, the gate verdicts
+7. **Report once to the human**: what shipped, the gate verdicts
    with their evidence, what is blocked and on whom, what is
    next. Decisions as options — never a done deal (D-06).
 
@@ -90,7 +109,10 @@ invariants — and the Return Gate every result passes through.
   the small task, and spends its own effort on the brief and the
   verdict — the two places leader judgment actually pays.
 - **Rule:** D-09 (a builder never judges its own work — a leader
-  who builds has no judge left).
+  who builds has no judge left). The one sanctioned exception is
+  lens-only mode (step 3): there the leader builds with named
+  hats because no delegate can — and the judging still leaves
+  the builder's hands.
 
 ### Spawn and vanish
 
@@ -123,6 +145,8 @@ Run alongside the core Return Gate. Every line must be true:
 
 - [ ] Goal restated in one sentence, and it heads every brief
 - [ ] Scope exists before the first spawn (D-04)
+- [ ] Delegate capabilities probed in the real project path
+      (read / write / shell); the composition matches the result
 - [ ] Pod composed from the decomposition — counts follow the
       work, parallel work is disjoint, judging scales with volume
 - [ ] Every return passed the Return Gate before acceptance

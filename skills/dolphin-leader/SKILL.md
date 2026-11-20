@@ -52,6 +52,27 @@ done deal (D-06). If work drifts from scope, amend the scope
 first — recorded — then respawn. Mid-build scope drift is how
 projects rot.
 
+## Capability modes
+
+The router's probe decides which mode the run is in; the mode is
+recorded in `.dolphin/` and stated in the final report.
+
+- **Full pod.** Delegates read, write, and run shell. Compose
+  and dispatch as below.
+- **Lens-only.** Delegates can read and judge but cannot write
+  files — some harnesses spawn tool-less children. You build in
+  the main session: the one case where the leader building is
+  correct rather than a failure. Announce each hat switch out
+  loud ("worker hat: implementing X"). Every build still goes to
+  delegate lenses for its verdict — you never judge your own
+  build, so D-09 holds: the judges are separate sessions, they
+  just cannot hold the pen. Tests a tester designs are written
+  by your worker hat verbatim, then run by the tester if it has
+  shell, otherwise by you, with the output routed back to it.
+- **Solo.** No usable delegates at all. Run the roles
+  sequentially, hats named, and tell the human plainly. A faked
+  pod is worse than an honest solo run.
+
 ## Brief anatomy
 
 Every delegate gets a written brief with all of:
