@@ -107,6 +107,10 @@ later as a defect in theirs.
 - Parallel only when disjoint: separate files or separate
   worktrees (one per worker, created before spawning). Overlap →
   sequential. Decided before spawning, never mid-run.
+- On every judge return, check the tree (`git status`): a
+  judge's footprint outside `.dolphin/` voids its verdict. The
+  breach is reported to the human, and the work is re-judged by
+  a fresh lens (D-09).
 - BLOCKED returns outrank new work: unblock, rescope, or escalate
   before dispatching anything else.
 - Fix loops cap at 3 rounds per task (D-11). At the cap, stop and

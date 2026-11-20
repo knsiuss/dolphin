@@ -384,6 +384,24 @@ still separate sessions), **solo** when there is no delegate
 mechanism worth the name. Capability is recorded per project +
 harness and re-probed when either changes.
 
+### v4.1.5 — everyone can write; territory is the fence (21 Nov 2026)
+
+The owner's ruling, verbatim in spirit: "semua harus bisa nulis
+dong" — every delegate should be able to write. The read-only
+judge split (v4.1.3) is reversed. Tool-stripping had by then
+caused three separate production failures (shell-write workarounds
+in v3, blocked tester/security, tool-less harness delegates), and
+it was never the only way to protect D-09: a read-only auditor
+could not even write its own evidence files, which D-07 requires
+to live under `.dolphin/`. Now every skill and both agent
+definitions grant the full toolset. Judge discipline is a rule
+with an audit instead of a removed capability: D-09 states that
+a judge writes only verdict and evidence files under
+`.dolphin/`, a judge that edits the work under review voids its
+verdict, and the leader checks the tree (`git status`) on every
+judge return. The smoke test pins the new invariant: Write
+present in all 15 frontmatters, and the fence stated in the core.
+
 ## Layout
 
 ```

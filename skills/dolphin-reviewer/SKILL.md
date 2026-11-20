@@ -1,8 +1,8 @@
 ---
 name: dolphin-reviewer
-description: The spec-and-semantics judge — checks the diff does what the scope promised and means what it says, issues the per-dimension gate verdict. Must be a different model family from the builder. Runs as a read-only delegate (dolphin-auditor). References the core by rule number.
+description: "The spec-and-semantics judge — checks the diff does what the scope promised and means what it says, issues the per-dimension gate verdict. Must be a different model family from the builder. Runs as a judge delegate (dolphin-auditor): full tools, fenced territory — writes verdict and evidence files under .dolphin/ only. References the core by rule number."
 disable-model-invocation: false
-allowed-tools: Read, Glob, Grep, Bash
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
 # Dolphin Reviewer

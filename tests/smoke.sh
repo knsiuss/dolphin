@@ -3,7 +3,7 @@
 # Run after ANY change to skills/, agents/, or scripts/. Proves:
 # pack structure (router + 13 skills, ≤250 lines each, frontmatter
 # names match, frontmatter parses as valid YAML) · agent definitions
-# (auditor is read-only) · no dead v3 transport referenced anywhere
+# (judge fence stated) · no dead v3 transport referenced anywhere
 # in skills/agents · init scaffolds
 # state only (no board) · deterministic scans (red on fixtures,
 # green on clean, package existence fail-closed).
@@ -59,16 +59,15 @@ else
   echo "skip - frontmatter YAML check (python3+yaml unavailable)"
 fi
 
-# Authoring lenses (tester, security) need Write inside a fenced
-# territory; pure judges (auditor, critic, reviewer) must NOT have
-# it — a judge that can edit what it judges breaks D-09.
-AUTH_OK=1
-grep -q "^allowed-tools:.*Write" "$PACK/skills/dolphin-tester/SKILL.md" || AUTH_OK=0
-grep -q "^allowed-tools:.*Write" "$PACK/skills/dolphin-security/SKILL.md" || AUTH_OK=0
-for j in dolphin-auditor dolphin-critic dolphin-reviewer; do
-  grep -q "^allowed-tools:.*Write" "$PACK/skills/$j/SKILL.md" && AUTH_OK=0
+# Every role holds Write — capability is never the fence,
+# territory is (v4.1.5). Judges are fenced by the D-09 rule plus
+# the leader's tree check, not by stripped tools.
+WRITE_OK=1
+for f in "$PACK"/skills/*/SKILL.md "$PACK"/agents/*.md; do
+  grep -qE "^(allowed-)?tools:.*Write" "$f" || WRITE_OK=0
 done
-if [ "$AUTH_OK" -eq 1 ]; then ok "authoring lenses can write, pure judges cannot"; else bad "authoring lenses can write, pure judges cannot"; fi
+grep -q "voids" "$PACK/skills/dolphin-protocol/SKILL.md" || WRITE_OK=0
+if [ "$WRITE_OK" -eq 1 ]; then ok "every role can write; judge fence is a stated rule"; else bad "every role can write; judge fence is a stated rule"; fi
 
 # The capability probe is load-bearing: harnesses differ in what
 # spawned delegates can do, and the pod must compose for the
@@ -87,9 +86,10 @@ if [ -f "$PACK/agents/dolphin-agent.md" ] && [ -f "$PACK/agents/dolphin-auditor.
   ok "agent definitions present (agent + auditor)"
 else bad "agent definitions present"; fi
 
-if grep -q "^tools:.*Write" "$PACK/agents/dolphin-auditor.md"; then
-  bad "auditor definition is read-only"
-else ok "auditor definition is read-only"; fi
+if grep -q "^tools:.*Write" "$PACK/agents/dolphin-auditor.md" \
+   && grep -q "voids" "$PACK/agents/dolphin-auditor.md"; then
+  ok "auditor definition can write, fence stated"
+else bad "auditor definition can write, fence stated"; fi
 
 # --- no dead v3 transport -------------------------------------------
 if grep -r -q -E "dolphin-say|dolphin-secretary|dolphin-pod" "$PACK/skills" "$PACK/agents"; then

@@ -2,6 +2,7 @@
 name: dolphin-protocol
 description: "The Dolphin CORE — identity, the numbered rules (D-01..D-12), file discipline, durable state, and the Return Gate. Every other Dolphin skill is a satellite of this file: it references these rules by number and never duplicates or renumbers them. Load first, before any role skill."
 disable-model-invocation: false
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
 # Dolphin Protocol — the Core
@@ -65,7 +66,12 @@ restate them. If a role skill and this core disagree, the core wins.
   falling back to shell writes.
 - **D-09 A builder never judges its own work.** Every build is
   checked by a lens that didn't build it; the reviewer must be a
-  different model family from the builder.
+  different model family from the builder. Every delegate holds
+  full write tools — the fence is territory, never capability.
+  A judge writes only verdict and evidence files under
+  `.dolphin/`; a judge that edits the work under review voids
+  its verdict, and the leader checks the tree on every judge
+  return.
 - **D-10 A gap is not a pass.** If a check did not run, say so.
   Silence reads as failure, never as approval.
 - **D-11 Fix loops cap at 3 rounds.** At the cap, stop and

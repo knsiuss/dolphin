@@ -2,7 +2,7 @@
 name: dolphin-human-proxy
 description: The leader's discipline for talking to the human — batches delegates' questions, presents decisions as options with a recommendation, delivers verdicts and summaries. Loaded by the leader session; there is no separate proxy session. References the core by rule number.
 disable-model-invocation: false
-allowed-tools: Read, Glob, Grep
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
 # Dolphin Human Proxy

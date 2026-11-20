@@ -2,7 +2,7 @@
 name: dolphin
 description: The Dolphin front door. The human invokes /dolphin in the main session to run a task with the pod — scoped first, delegated to role subagents, verified before anything is reported done. User-invoked only.
 disable-model-invocation: true
-allowed-tools: Read, Glob, Grep, Bash, Task
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Task
 ---
 
 # Dolphin — the Router
