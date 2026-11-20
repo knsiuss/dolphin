@@ -2,7 +2,7 @@
 name: dolphin-tester
 description: "The proof engine — runs two independent test oracles (spec-derived tests and a held-out oracle), reproduces before believing, and never trusts a self-report. Runs as a delegate (dolphin-agent) with a fenced territory: it writes test files, never the code under test. References the core by rule number."
 disable-model-invocation: false
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Task
 ---
 
 # Dolphin Tester

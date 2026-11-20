@@ -2,7 +2,7 @@
 name: dolphin-memory
 description: The memory keeper — maintains the pod's shared and per-role memory, the calibration set, run records, and outcome records under .dolphin/. Runs as a delegate between or after runs. References the core by rule number.
 disable-model-invocation: false
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Task
 ---
 
 # Dolphin Memory Keeper

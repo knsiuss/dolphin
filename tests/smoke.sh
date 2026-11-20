@@ -59,15 +59,18 @@ else
   echo "skip - frontmatter YAML check (python3+yaml unavailable)"
 fi
 
-# Every role holds Write — capability is never the fence,
-# territory is (v4.1.5). Judges are fenced by the D-09 rule plus
-# the leader's tree check, not by stripped tools.
-WRITE_OK=1
+# Every role holds EVERY tool — one uniform toolset (v4.1.6).
+# Discipline lives in the rules (territory fences, the D-09 judge
+# fence, D-12 no-delegate-spawning), never in a stripped list.
+UNI_OK=1
 for f in "$PACK"/skills/*/SKILL.md "$PACK"/agents/*.md; do
-  grep -qE "^(allowed-)?tools:.*Write" "$f" || WRITE_OK=0
+  line=$(grep -E "^(allowed-)?tools:" "$f") || { UNI_OK=0; continue; }
+  for t in Read Write Edit Glob Grep Bash Task; do
+    echo "$line" | grep -qw "$t" || UNI_OK=0
+  done
 done
-grep -q "voids" "$PACK/skills/dolphin-protocol/SKILL.md" || WRITE_OK=0
-if [ "$WRITE_OK" -eq 1 ]; then ok "every role can write; judge fence is a stated rule"; else bad "every role can write; judge fence is a stated rule"; fi
+grep -q "voids" "$PACK/skills/dolphin-protocol/SKILL.md" || UNI_OK=0
+if [ "$UNI_OK" -eq 1 ]; then ok "uniform full toolset for every role; fences are rules"; else bad "uniform full toolset for every role; fences are rules"; fi
 
 # The capability probe is load-bearing: harnesses differ in what
 # spawned delegates can do, and the pod must compose for the

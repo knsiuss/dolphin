@@ -402,6 +402,20 @@ verdict, and the leader checks the tree (`git status`) on every
 judge return. The smoke test pins the new invariant: Write
 present in all 15 frontmatters, and the fence stated in the core.
 
+### v4.1.6 — one uniform toolset (21 Nov 2026)
+
+The owner closed the question: "semua roles harus bisa pake
+tools" — all roles must be able to use tools. The last asymmetry
+left after v4.1.5 was Task, held only by the leader and router.
+Now all 13 skills and both agent definitions carry the identical
+list — Read, Write, Edit, Glob, Grep, Bash, Task — and the smoke
+test asserts the full set in every frontmatter. What remains
+restricted is behaviour, stated as rules: delegates don't spawn
+(D-12 — a delegate that needs more hands asks in its return and
+the leader spawns), judges stay inside their `.dolphin/` fence
+(D-09). Capability is uniform across the pod; only the work is
+divided.
+
 ## Layout
 
 ```

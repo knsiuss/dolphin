@@ -2,7 +2,7 @@
 name: dolphin-worker
 description: The builder — implements scoped tasks inside its brief's territory, proves work by running it, and rebuts review findings with execution. Runs as a delegate (dolphin-agent); specialist workers load this plus their specialty. References the core by rule number.
 disable-model-invocation: false
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Task
 ---
 
 # Dolphin Worker

@@ -2,7 +2,7 @@
 name: dolphin-security
 description: "The security lens — holds veto power over every merge. Deterministic checks first (package existence, secrets), then judgment on auth, injection, and unsafe defaults. Runs as a delegate (dolphin-agent) with a fenced territory: writes proof-of-concept files under .dolphin/evidence/ only, never product code. References the core by rule number."
 disable-model-invocation: false
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Task
 ---
 
 # Dolphin Security Reviewer

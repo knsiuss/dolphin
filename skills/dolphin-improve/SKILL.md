@@ -2,7 +2,7 @@
 name: dolphin-improve
 description: "The self-improvement role — mines finished work for mistake classes, fixes them at the highest level, and proposes skill changes. Propose-only: writes proposals under .dolphin/, never edits a gate or skill directly, never weakens a check. Runs as a delegate, in batches between runs. References the core by rule number."
 disable-model-invocation: false
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Task
 ---
 
 # Dolphin Self-Improvement

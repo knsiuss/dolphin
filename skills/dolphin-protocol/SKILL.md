@@ -2,7 +2,7 @@
 name: dolphin-protocol
 description: "The Dolphin CORE — identity, the numbered rules (D-01..D-12), file discipline, durable state, and the Return Gate. Every other Dolphin skill is a satellite of this file: it references these rules by number and never duplicates or renumbers them. Load first, before any role skill."
 disable-model-invocation: false
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Task
 ---
 
 # Dolphin Protocol — the Core
@@ -79,7 +79,10 @@ restate them. If a role skill and this core disagree, the core wins.
   quality comes from.
 - **D-12 The leader is the only voice.** Delegates return to the
   leader; the human hears one batched, attributed summary, never
-  eleven raw relays.
+  eleven raw relays. Every role holds every tool, Task included
+  — but delegates don't spawn. A delegate that needs more hands
+  asks in its return; the leader spawns. Capability is uniform;
+  orchestration stays the leader's.
 
 ## Durable state: `.dolphin/`
 

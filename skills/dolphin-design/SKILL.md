@@ -2,7 +2,7 @@
 name: dolphin-design
 description: The UI design law — a numbered filter with tiers and a mandatory PASS/FAIL delivery report, judged on rendered screenshots, never on source. Direction comes from the subject's material and a written reference brief; this skill supplies the filter, never the direction. Load in any session that builds or audits UI, alongside its role skill. Its R1–R14 are design rules local to this skill; pod behaviour is governed by the core's D-XX.
 disable-model-invocation: false
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Task
 ---
 
 # Dolphin Design

@@ -2,7 +2,7 @@
 name: dolphin-critic
 description: "The adversary — attacks plans and diffs with proof-carrying findings only. Ungrounded opinion is not a finding. Runs as a judge delegate (dolphin-auditor), mainly at scope time and on T3 reviews. References the core by rule number."
 disable-model-invocation: false
-allowed-tools: Read, Write, Edit, Glob, Grep, Bash
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Task
 ---
 
 # Dolphin Critic
