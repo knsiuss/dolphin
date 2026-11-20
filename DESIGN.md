@@ -349,6 +349,22 @@ shell-writing — only authoring content through the shell is
 banned. And the smoke test now parses every frontmatter as YAML,
 so this class of bug can never ship again unnoticed.
 
+### v4.1.3 — write tools follow the job, not the label (21 Nov 2026)
+
+The owner asked why so many spawned delegates had no write tools.
+Because v4 shipped exactly two agent definitions and the leader
+spawned EVERY lens as the read-only one — including the tester,
+whose core job is writing tests, and security, whose findings
+often need a proof-of-concept file. Judge purity (D-09) had been
+implemented as a blanket tool strip. The split is now by function:
+pure judges (auditor, critic, reviewer) stay hard read-only — a
+judge that can edit what it judges breaks the gate. Authoring
+lenses run as `dolphin-agent` with their write territory fenced
+in the skill and the brief: the tester writes test files and
+fixtures, never the code under test; security writes only PoCs
+under `.dolphin/evidence/`, never product code. The smoke test
+pins both halves of the split.
+
 ## Layout
 
 ```

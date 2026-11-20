@@ -58,7 +58,10 @@ Every delegate gets a written brief with all of:
 
 - The run's goal sentence (identical in every brief)
 - Its role skill, and the agent definition to run as
-  (`dolphin-agent` for builders, `dolphin-auditor` for lenses)
+  (`dolphin-agent` for builders and for the authoring lenses —
+  tester and security — with their write territory fenced in the
+  brief; `dolphin-auditor` for the pure judges: auditor, critic,
+  reviewer)
 - The scope path and the acceptance criteria IDs it owns
 - Its territory: exact files, or its own worktree for parallel work
 - Constraints (stack, patterns, non-goals) and the return shape

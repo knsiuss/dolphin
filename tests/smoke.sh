@@ -59,6 +59,17 @@ else
   echo "skip - frontmatter YAML check (python3+yaml unavailable)"
 fi
 
+# Authoring lenses (tester, security) need Write inside a fenced
+# territory; pure judges (auditor, critic, reviewer) must NOT have
+# it — a judge that can edit what it judges breaks D-09.
+AUTH_OK=1
+grep -q "^allowed-tools:.*Write" "$PACK/skills/dolphin-tester/SKILL.md" || AUTH_OK=0
+grep -q "^allowed-tools:.*Write" "$PACK/skills/dolphin-security/SKILL.md" || AUTH_OK=0
+for j in dolphin-auditor dolphin-critic dolphin-reviewer; do
+  grep -q "^allowed-tools:.*Write" "$PACK/skills/$j/SKILL.md" && AUTH_OK=0
+done
+if [ "$AUTH_OK" -eq 1 ]; then ok "authoring lenses can write, pure judges cannot"; else bad "authoring lenses can write, pure judges cannot"; fi
+
 if grep -q "disable-model-invocation: true" "$PACK/skills/dolphin/SKILL.md" \
    && grep -q "dolphin-leader" "$PACK/skills/dolphin/SKILL.md"; then
   ok "router /dolphin is user-invoked and loads the leader"
