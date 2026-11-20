@@ -296,6 +296,30 @@ shell only runs things). The front door is now one command —
 `/dolphin` — a user-invoked router in the main session, on the
 pstack pattern of a single entry skill that routes to the rest.
 
+## v4.1 — core + satellites (21 Nov 2026)
+
+The owner held up the antislop system as the structural model:
+one core file holding the mechanism and the numbered hard rules;
+satellite skills that deep-dive one concern, cite core rules by
+number, and never duplicate or renumber them; every pattern taught
+as failure / why / before / after; a false-positive guard so the
+filter doesn't eat good work; and a checklist at the end of every
+satellite that supplements the core gate. Dolphin v4.1 adopts that
+architecture wholesale. `dolphin-protocol` is now the core: rules
+D-01..D-12 (the v4 principles, numbered, with the file-tool
+discipline promoted to D-08) and the Return Gate every report
+must pass. Each role skill gained the satellite shape — a
+"Part of the Dolphin system" header, `allowed-tools` in its
+frontmatter (matching the agent definition it runs as), failure
+patterns drawn from the pod's own incident record (the shell
+write, the inherited PASS, PASS-from-source, the blended verdict,
+the quieter gate), a NOT-to-flag guard where the role judges, and
+a closing checklist. `dolphin-design` keeps its own R1–R14 as
+design-local rules and now says so; the auditor grew the cluster
+rule — a FAIL never rests on a lone tell. The smoke test enforces
+the structure mechanically: numbering complete, every satellite
+citing the core, every satellite ending in its checklist.
+
 ## Layout
 
 ```

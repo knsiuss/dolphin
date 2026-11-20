@@ -52,6 +52,33 @@ if grep -r -q -E "dolphin-say|dolphin-secretary|dolphin-pod" "$PACK/skills" "$PA
   bad "no skill/agent references the removed v3 transport"
 else ok "no skill/agent references the removed v3 transport"; fi
 
+# --- v4.1 core + satellite structure ----------------------------------
+CORE="$PACK/skills/dolphin-protocol/SKILL.md"
+MISSING=""
+for n in 01 02 03 04 05 06 07 08 09 10 11 12; do
+  grep -q "\*\*D-$n" "$CORE" || MISSING="$MISSING D-$n"
+done
+if [ -z "$MISSING" ] && grep -q "Return Gate" "$CORE"; then
+  ok "core carries D-01..D-12 + the Return Gate"
+else bad "core carries D-01..D-12 + the Return Gate (missing:$MISSING)"; fi
+
+SATFAIL=""
+for f in "$PACK"/skills/*/SKILL.md; do
+  [ "$f" = "$CORE" ] && continue
+  grep -q "dolphin-protocol" "$f" || SATFAIL="$SATFAIL $(basename "$(dirname "$f")"):no-core-ref"
+  grep -q "^allowed-tools:" "$f" || SATFAIL="$SATFAIL $(basename "$(dirname "$f")"):no-allowed-tools"
+done
+if [ -z "$SATFAIL" ]; then ok "every satellite cites the core + declares allowed-tools"; else bad "satellite structure ($SATFAIL)"; fi
+
+CHKFAIL=""
+for f in "$PACK"/skills/*/SKILL.md; do
+  case "$f" in *dolphin-protocol*|*dolphin-design*) continue ;; esac
+  grep -q -i "^## .*checklist" "$f" || CHKFAIL="$CHKFAIL $(basename "$(dirname "$f")")"
+done
+if [ -z "$CHKFAIL" ] && grep -q "Delivery Report" "$PACK/skills/dolphin-design/SKILL.md"; then
+  ok "every satellite ends in a checklist (design: Delivery Report)"
+else bad "satellite checklists (missing:$CHKFAIL)"; fi
+
 # --- init scaffolds state only ---------------------------------------
 export DOLPHIN_PROJECT="$TMP/proj"
 mkdir -p "$DOLPHIN_PROJECT"

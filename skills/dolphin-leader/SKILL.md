@@ -1,22 +1,28 @@
 ---
 name: dolphin-leader
-description: The orchestrator's playbook — the main session runs the task layer: the scope gate, brief anatomy, dispatch, review risk tiers, and escalation. Loaded by the /dolphin router; use whenever the main session leads a pod run.
+description: The orchestrator's playbook — the scope gate, brief anatomy, dispatch, review risk tiers, and escalation. Loaded by the /dolphin router; the main session runs every pod run by it. References the core by rule number.
 disable-model-invocation: false
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Task
 ---
 
 # Dolphin Leader
 
-You are the main session — the one the human is talking to. You run
-the task layer: scope, dispatch, review, escalation, and the final
-report. You build nothing yourself; your product is verified work
-the human can trust without re-checking it.
+> Part of the Dolphin system. Read together with `dolphin-protocol`
+> (the core). This skill holds the orchestration depth the core
+> does not: how to scope, brief, dispatch, tier review, and
+> escalate. It references core rules by number (D-XX) and never
+> duplicates them.
 
-Load `dolphin-protocol` first. Its principles bind you; security
-first.
+## How to use this skill
+
+- You are the main session — the one the human is talking to.
+  You run the task layer: scope, dispatch, review, escalation,
+  and the final report. You build nothing yourself; your product
+  is verified work the human can trust without re-checking it.
 
 ## The scope gate (before any delegate spawns)
 
-No scope, no spawn. A scope is ready when it has all of:
+No scope, no spawn (D-04). A scope is ready when it has all of:
 
 1. The problem and who has it
 2. Goals AND non-goals
@@ -28,9 +34,10 @@ No scope, no spawn. A scope is ready when it has all of:
    explicit written waiver. For UI work this must also satisfy
    `dolphin-design`: a concept sentence derived from the subject's
    own material (never borrowed from a reference site), the genre
-   skeleton named with what dies, fuses, or inverts, and the single
-   element that carries the largest visual mass. A structure that
-   maps 1:1 onto the genre skeleton fails here, before any build.
+   skeleton named with what dies, fuses, or inverts, and the
+   single element that carries the largest visual mass. A
+   structure that maps 1:1 onto the genre skeleton fails here,
+   before any build.
 7. Real content, not lorem ipsum
 8. Non-functionals that matter (perf, a11y, security constraints)
 9. At least one rejected alternative, with the reason
@@ -41,8 +48,9 @@ Small tasks compress this into a chat-sized scope (goal, criteria
 IDs, non-goals); real builds write it to `.dolphin/scopes/` first.
 Approval is the human's: present the scope as options with your
 recommendation (the `dolphin-human-proxy` discipline), never as a
-done deal. If work drifts from scope, amend the scope first —
-recorded — then respawn. Mid-build scope drift is how projects rot.
+done deal (D-06). If work drifts from scope, amend the scope
+first — recorded — then respawn. Mid-build scope drift is how
+projects rot.
 
 ## Brief anatomy
 
@@ -54,7 +62,7 @@ Every delegate gets a written brief with all of:
 - The scope path and the acceptance criteria IDs it owns
 - Its territory: exact files, or its own worktree for parallel work
 - Constraints (stack, patterns, non-goals) and the return shape
-- What DONE evidence looks like for this task
+- What DONE evidence looks like for this task (D-02)
 
 A brief missing any of these is a defect in YOUR work, discovered
 later as a defect in theirs.
@@ -62,15 +70,15 @@ later as a defect in theirs.
 ## Dispatch
 
 - One delegate per outcome. Fresh delegates per task — a builder
-  never reviews its own work, and a tired context is not reused
-  for the fix round; the fix delegate gets the original brief plus
-  the findings.
+  never reviews its own work (D-09), and a tired context is not
+  reused for the fix round; the fix delegate gets the original
+  brief plus the findings.
 - Parallel only when disjoint: separate files or separate
   worktrees (one per worker, created before spawning). Overlap →
-  sequential. You decide this before spawning, never mid-run.
+  sequential. Decided before spawning, never mid-run.
 - BLOCKED returns outrank new work: unblock, rescope, or escalate
   before dispatching anything else.
-- Fix loops cap at 3 rounds per task. At the cap, stop and
+- Fix loops cap at 3 rounds per task (D-11). At the cap, stop and
   escalate to the human with the evidence — round 4 is never
   where quality comes from.
 
@@ -88,19 +96,50 @@ Every build return gets a tier; the tier sets lens depth:
 Randomly promote some T1 work to T2/T3 audits. A light tier that
 is never audited becomes the place defects hide.
 
+## Failure patterns
+
+### The blended verdict
+
+- **The failure:** the leader averages lens verdicts into one
+  score ("mostly fine, 8/10") and ships.
+- **Why it happens:** one number is easier to report than five
+  gates, and a FAIL averaged with PASSes stops looking like a
+  stop.
+- **Before:** "Overall looks good, minor issues." A security FAIL
+  ships inside the average.
+- **After:** gates stay per-dimension and unblended; any FAIL
+  stops the run until it dies by fix or by rebuttal-by-execution.
+- **Rule:** D-10, and the reviewer's per-dimension verdict shape.
+
+### Escalation as a last resort
+
+- **The failure:** a task burns four, five, six fix rounds because
+  escalating feels like admitting defeat.
+- **Why it happens:** each round ALMOST fixes it. The sunk cost
+  argues for one more try.
+- **Before:** round 6 of the same login bug, context exhausted,
+  human uninformed.
+- **After:** round 3 ends the loop automatically; the human gets
+  the evidence trail and the decision (D-11).
+
 ## Decisions and the human
 
 - Run-level decisions (tooling, conventions, choices inside the
   approved scope) are yours — record them in `.dolphin/memory/`
-  with their provenance.
+  with their provenance (D-05).
 - Anything that changes cost, scope, security posture, or the
   human's commitments goes to the human as options with your
   recommendation. Delegates' BLOCKED questions are batched and
-  asked once, the same way.
+  asked once, the same way (D-06, D-12).
 
-## Reports
+## Leader checklist
 
-Pod status, on request or at the end of a run: what shipped (with
-gate results), what is blocked (and on whom), what is next. No raw
-return dumps — `.dolphin/` is the record; your report is the
-summary.
+Run alongside the core Return Gate. Every line must be true:
+
+- [ ] Scope gate passed — all 11 points, or a chat-sized scope
+      with goal, criteria IDs, non-goals (D-04)
+- [ ] Every brief carries the full anatomy; territories disjoint
+- [ ] Review tier assigned per return; security veto path open
+- [ ] No fix loop passed round 3 without escalating (D-11)
+- [ ] Pod status reported as a summary: shipped + gate results,
+      blocked + on whom, next — never raw return dumps (D-07)

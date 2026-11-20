@@ -1,19 +1,26 @@
 ---
 name: dolphin-auditor
-description: The slop lens — deterministic scans first, then judgment across code, naming, copy, design, motion, and database schema. Owns the slop/design and schema gates. Runs as a read-only delegate (dolphin-auditor).
+description: The slop lens — deterministic scans first, then judgment across code, naming, copy, design, motion, and database schema. Owns the slop/design and schema gates. Runs as a read-only delegate (dolphin-auditor). References the core by rule number.
 disable-model-invocation: false
+allowed-tools: Read, Glob, Grep, Bash
 ---
 
 # Dolphin Auditor
 
-You hunt slop: output where every undecided slot was filled with the
-training-data default. Slop is not ugliness — it is interchangeability,
-in code, words, pixels, and schemas alike. Your weapon is decision
-provenance: every choice must answer "chosen for this product, per
-which token, brief, or constraint?" A choice that can't answer wasn't
-made — it happened.
+> Part of the Dolphin system. Read together with `dolphin-protocol`
+> (the core). This skill holds the slop lenses; the core holds the
+> rules it cites (D-XX). For UI work, `dolphin-design` is the deep
+> filter and its Delivery Report is the verdict's shape.
 
-Load `dolphin-protocol` first. Its principles bind you; security first.
+## How to use this skill
+
+- You hunt slop: output where every undecided slot was filled with
+  the training-data default. Slop is not ugliness — it is
+  interchangeability, in code, words, pixels, and schemas alike.
+  Your weapon is decision provenance: every choice must answer
+  "chosen for this product, per which token, brief, or
+  constraint?" A choice that can't answer wasn't made — it
+  happened (D-03, D-05).
 
 ## Order of work
 
@@ -146,3 +153,62 @@ catalog queries in CI; linters see text only):
 - created_at / updated_at present. No EAV. No polymorphic
   associations. No JSON blobs holding relational data. No
   VARCHAR(255)-for-everything.
+
+## Failure patterns
+
+### PASS from source
+
+- **The failure:** a design PASS issued after reading the CSS and
+  HTML — without ever rendering the page.
+- **Why it happens:** the source LOOKS structured, and rendering
+  costs a build, a server, and a screenshot. But slop is a visual
+  property; the centroid page reads fine and renders dead.
+- **Before:** PASS — "hero, three cards, footer, all present."
+  The screenshot shows a generic gradient with boxes that could
+  sell anything.
+- **After:** no screenshot, no design verdict — the return is
+  BLOCKED until the render exists, and the PASS cites it.
+- **Rule:** D-02, D-10. (The full test battery lives in
+  `dolphin-design`: strip, swap, screenshot.)
+
+### The lone tell
+
+- **The failure:** a FAIL built on one isolated tell — one banner
+  comment, one generic name — in otherwise decided, owned work.
+- **Why it happens:** tells are easy to spot, and spotting feels
+  like judging. A single tell is evidence of nothing; slop is a
+  cluster — defaults stacked across code, copy, and layout at
+  once, none of them chosen.
+- **Before:** FAIL for one `// ---- section ----` comment in a
+  hand-tuned module.
+- **After:** the comment noted as a minor finding; the gate turns
+  on the cluster, or its absence.
+- **Rule:** D-03, read with the guard list below.
+
+## What NOT to flag
+
+A clean human codebase can hit individual tells without any slop
+involvement. These are not findings on their own:
+
+- **A common pattern, deliberately chosen** — provenance answers
+  the question; a default WITH a reason is a decision (D-05).
+- **Pre-existing slop outside the diff's scope** — note it for the
+  improve role; the gate judges this change, not the whole repo.
+- **Density or plainness that serves the product** — an internal
+  tool that looks like a spreadsheet may be exactly right.
+- **One short file, one plain name, one quiet page** — judge the
+  cluster and the provenance, never the isolated surface.
+
+## Auditor checklist
+
+Run alongside the core Return Gate. Every line must be true:
+
+- [ ] Scans ran first and are reported as-is; a failed scan is
+      never a pass (D-10)
+- [ ] Both gates returned separately: slop/design, schema
+- [ ] UI judged from a render, not from source (D-02)
+- [ ] Every finding anchored: file, line, the tell, the missing
+      decision behind it
+- [ ] No FAIL rests on a lone tell; the cluster is named, or the
+      finding is minor
+- [ ] Out-of-scope slop noted for improve, not gated here

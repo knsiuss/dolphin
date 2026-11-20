@@ -52,6 +52,12 @@ Full reasoning: `DESIGN.md`.
 
 ## The shape of it
 
+The pack is a core + satellites (the antislop architecture):
+`dolphin-protocol` is the core — the numbered rules D-01..D-12 and
+the Return Gate — and every other skill cites those rules by
+number instead of restating them, teaches its patterns as
+failure / why / before / after, and closes with a checklist.
+
 - `skills/dolphin/` — the router (`/dolphin`), the front door
 - `skills/dolphin-protocol/` — citizenship: principles, file
   discipline, report shapes; ships the deterministic tools

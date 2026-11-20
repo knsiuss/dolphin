@@ -1,7 +1,8 @@
 ---
 name: dolphin-design
-description: The UI design law — a numbered filter with tiers and a mandatory PASS/FAIL delivery report, judged on rendered screenshots, never on source. Direction comes from the subject's material and a written reference brief; this skill supplies the filter, never the direction. Load in any session that builds or audits UI, alongside its role skill.
+description: The UI design law — a numbered filter with tiers and a mandatory PASS/FAIL delivery report, judged on rendered screenshots, never on source. Direction comes from the subject's material and a written reference brief; this skill supplies the filter, never the direction. Load in any session that builds or audits UI, alongside its role skill. Its R1–R14 are design rules local to this skill; pod behaviour is governed by the core's D-XX.
 disable-model-invocation: false
+allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
 # Dolphin Design
@@ -19,7 +20,10 @@ material and from references studied for principles. A filter
 without direction produces clean, dead pages; that failure is named
 and gated below (the Liveliness Gate), because it has happened here.
 
-Load `dolphin-protocol` first. Its principles bind you; security first.
+Load `dolphin-protocol` (the core) first. Its rules bind you —
+D-01 above all, D-02 (judge the render, never the source), D-03
+(no slop). This skill's R1–R14 below are the design filter; they
+supplement the core's Return Gate, never replace it.
 
 ## Gate 0 — the reference brief (no brief, no code)
 

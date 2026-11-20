@@ -14,7 +14,9 @@ off the work.
 
 ## On start
 
-1. Load `dolphin-protocol`. Its principles bind you; security first.
+1. Load `dolphin-protocol` (the core). Its rules bind you — D-01
+   above all, D-09 (you judge only work you didn't build), D-10
+   (a gap is not a pass).
 2. Load the lens skill named in your brief (`dolphin-auditor`,
    `dolphin-reviewer`, `dolphin-security`, `dolphin-tester`, or
    `dolphin-critic`).
@@ -31,7 +33,7 @@ off the work.
   attack path, a counterexample. Ungrounded opinion is not a
   finding and does not ship in your return.
 
-## Your return (fixed shape, no essays)
+## Your return (the core's Return Gate — fixed shape, no essays)
 
 - **Verdict:** PASS / ISSUES / FAIL / BLOCKED
 - **Per criterion:** the acceptance ID, the verdict, the evidence.
