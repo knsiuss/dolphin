@@ -30,7 +30,9 @@ allowed-tools: Read, Glob, Grep, Bash, Task
    small tasks get a chat-sized scope (goal, acceptance criteria
    with IDs, non-goals), real builds get a scope file in
    `.dolphin/scopes/`.
-3. **Pick a mode** (below). Default to the smallest mode that fits.
+3. **Compose the pod** (below). There is no fixed team size:
+   the decomposition of the work decides how many delegates
+   spawn, and when.
 4. **Spawn delegates** through the harness's native subagent
    mechanism, using the `dolphin-agent` / `dolphin-auditor`
    definitions and a written brief per delegate (anatomy in
@@ -42,18 +44,36 @@ allowed-tools: Read, Glob, Grep, Bash, Task
    with their evidence, what is blocked and on whom, what is
    next. Decisions as options — never a done deal (D-06).
 
-## Modes
+## Composing the pod
 
-| Mode | Shape | Use when |
-|---|---|---|
-| Solo | 1 worker + 1 auditor | One outcome, one area |
-| Pipeline | worker → tester → reviewer, sequential | Multi-step work with dependencies |
-| Swarm | N workers in parallel (one worktree each) + 1 gatekeeper auditor | Independent slices, speed matters |
-| Arena | N workers attempt the SAME task independently, gatekeeper picks | A hard problem with no obvious approach |
+There are no fixed modes and no fixed team size. The leader
+composes the pod from the scoped work, under four invariants:
 
-Parallel means disjoint: two delegates never edit the same files.
-File overlap forces sequential dispatch or separate worktrees —
-decided before spawning, never mid-run.
+1. **One worker per independent slice.** Decompose the scope;
+   every slice that can run now gets its own worker, in parallel.
+   One slice → one worker. Nine slices → nine workers. Slices
+   with dependencies run in waves, in dependency order.
+2. **Every build is judged by a lens that didn't build it**
+   (D-09). Lenses parallelise too: on one return, tester,
+   security, reviewer, and auditor can run concurrently — they
+   read the same diff independently.
+3. **Gatekeeping scales with volume.** One auditor is a
+   bottleneck and then a rubber stamp. When returns outnumber
+   what one judge can actually check, shard the judging: one
+   lens per slice or per dimension, plus a gatekeeper who reads
+   verdicts, not diffs.
+4. **Parallel means disjoint.** Two delegates never edit the same
+   files; overlap forces sequential waves or separate worktrees
+   — decided before spawning, never mid-run.
+
+Shapes that recur — examples, not a menu: a lone worker + one
+auditor for a single outcome; a worker → tester → reviewer chain
+when steps depend on each other; a fan-out of workers with
+sharded lenses when speed matters; several workers attempting
+the SAME hard problem independently, with a gatekeeper picking
+the survivor, when no approach is obviously right. Compose
+freely between and beyond these. What never changes is the
+invariants — and the Return Gate every result passes through.
 
 ## Failure patterns
 
@@ -103,7 +123,8 @@ Run alongside the core Return Gate. Every line must be true:
 
 - [ ] Goal restated in one sentence, and it heads every brief
 - [ ] Scope exists before the first spawn (D-04)
-- [ ] Mode chosen deliberately; parallel work is disjoint
+- [ ] Pod composed from the decomposition — counts follow the
+      work, parallel work is disjoint, judging scales with volume
 - [ ] Every return passed the Return Gate before acceptance
 - [ ] The human got ONE report: verdicts, evidence, blockers, next
 - [ ] If the harness has no subagent mechanism, that was said

@@ -73,6 +73,13 @@ later as a defect in theirs.
   never reviews its own work (D-09), and a tired context is not
   reused for the fix round; the fix delegate gets the original
   brief plus the findings.
+- Counts follow the decomposition, never a template: one worker
+  per independent slice, spawned together when their territories
+  are disjoint; dependent slices in waves. Lenses compose the
+  same way — tester, security, reviewer, and auditor judge one
+  return concurrently, and when returns outnumber one judge's
+  real attention, shard judging by slice or dimension under one
+  gatekeeper who reads verdicts, not diffs.
 - Parallel only when disjoint: separate files or separate
   worktrees (one per worker, created before spawning). Overlap →
   sequential. Decided before spawning, never mid-run.

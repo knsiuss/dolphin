@@ -320,6 +320,19 @@ rule — a FAIL never rests on a lone tell. The smoke test enforces
 the structure mechanically: numbering complete, every satellite
 citing the core, every satellite ending in its checklist.
 
+### v4.1.1 — composition over modes (21 Nov 2026)
+
+The router originally shipped a mode table (Solo / Pipeline /
+Swarm / Arena) with fixed shapes — "1 worker + 1 auditor". The
+owner rejected it on sight: a capable leader spawns as many
+agents as the work needs, not the number a table allows. The
+table is gone. In its place, composition invariants: one worker
+per independent slice, lenses parallelise and shard as volume
+grows, every build judged by a non-builder, parallel work
+disjoint. The recurring shapes survive as examples, demoted from
+menu to illustration. Fixed counts were a mode; the invariants
+are the law.
+
 ## Layout
 
 ```
