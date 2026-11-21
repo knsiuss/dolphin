@@ -416,6 +416,21 @@ the leader spawns), judges stay inside their `.dolphin/` fence
 (D-09). Capability is uniform across the pod; only the work is
 divided.
 
+### v4.1.7 — drawn subjects get hard rules (21 Nov 2026)
+
+Two SVG benches in one evening (red panda, then pelican) passed
+every existing gate and were both rejected by the owner on sight —
+the second with "jelek banget". In both runs the design judge had
+in fact seen the flaws and filed them as non-blocking tells:
+tape-straight tail bands, floating ear halos, half-dead eyes, an
+S-neck collapsed into a hump, a wing reading as a pocket. The
+filter knew, and passed anyway. dolphin-design now carries
+R15–R18 as Tier-1 hard rules for drawn subjects — markings follow
+the form, nothing floats, eyes read alive, the gesture survives
+at thumbnail — and a PASS that lists any of them as a
+non-blocking tell is void. The Delivery Report gains a Tier 1d
+line so the four are answered on every drawn artefact.
+
 ## Layout
 
 ```

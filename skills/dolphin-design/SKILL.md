@@ -1,19 +1,14 @@
 ---
 name: dolphin-design
-description: The UI design law — a numbered filter with tiers and a mandatory PASS/FAIL delivery report, judged on rendered screenshots, never on source. Direction comes from the subject's material and a written reference brief; this skill supplies the filter, never the direction. Load in any session that builds or audits UI, alongside its role skill. Its R1–R14 are design rules local to this skill; pod behaviour is governed by the core's D-XX.
+description: The UI design law — a numbered filter with tiers and a mandatory PASS/FAIL delivery report, judged on rendered screenshots, never on source. Direction comes from the subject's material and a written reference brief; this skill supplies the filter, never the direction. Load in any session that builds or audits UI, alongside its role skill. Its R1–R18 are design rules local to this skill; pod behaviour is governed by the core's D-XX.
 disable-model-invocation: false
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Task
 ---
 
 # Dolphin Design
 
-Slop is a structural failure, not a styling failure. A page can pass
-every token, palette, and provenance check and still be the genre
-default wearing a costume. This skill exists because Dolphin pilot
-pages did exactly that — every gate PASS, and the owner still read
-them instantly as AI slop. So this skill is a filter with a memory:
-numbered rules in three tiers, a brief before code, a liveliness
-gate, and one mandatory report that closes every UI task.
+Slop is a structural failure, not a styling failure. A page can pass every token, palette, and provenance check and still be the genre default wearing a costume. This skill exists because Dolphin pilot pages did exactly that — every gate PASS, and the owner still read them instantly as AI slop.
+So this skill is a filter with a memory: numbered rules in three tiers, a brief before code, a liveliness gate, and one mandatory report that closes every UI task.
 
 A filter is not a direction. Direction comes from the subject's own
 material and from references studied for principles. A filter
@@ -22,7 +17,7 @@ and gated below (the Liveliness Gate), because it has happened here.
 
 Load `dolphin-protocol` (the core) first. Its rules bind you —
 D-01 above all, D-02 (judge the render, never the source), D-03
-(no slop). This skill's R1–R14 below are the design filter; they
+(no slop). This skill's R1–R18 below are the design filter; they
 supplement the core's Return Gate, never replace it.
 
 ## Gate 0 — the reference brief (no brief, no code)
@@ -160,9 +155,16 @@ slop; the only rebuttal is structure (the three tests, shown).
   ≥44px · press scale 0.96–0.98 · one interactive colour, and it
   appears nowhere else.
 
+### Tier 1 for drawn subjects — hard rules. Any one failure fails the gate.
+On a drawn subject (creature, character, scene — any pictorial artwork) these four are Tier 1, not tells. Two bench drawings (red panda, pelican — 21 Nov 2026) passed every rule above and were rejected by the owner on sight; in both runs the judge had filed exactly these flaws as non-blocking. A PASS that lists any of them as a non-blocking observation is void — the owner's eye reads these first, so the gate does too.
+- **R15 · Markings follow the form.** Any band, stripe, ring, or patch on a curved form curves with it; a straight-edged band across a curved tail or body reads as tape and fails. (Red panda: trapezoid tail bands.)
+- **R16 · Nothing floats.** Every element joins the silhouette or another element; a hovering halo or patch reads as a sticker and fails. (Red panda: detached ear halos. Pelican: isolated eye-patch disc.)
+- **R17 · Eyes read alive.** Eyes are open with a highlight unless the brief specifies sleep or rest; half-lidded or highlight-less eyes read as dead and fail. (Red panda: the owner's first-named flaw.)
+- **R18 · The gesture survives.** The subject's defining gesture (a pelican's S-neck, a tail's curl) still reads at thumbnail size; collapsed into a hump, pocket, or blob, the screenshot test fails however many markers are present. (Pelican: judge PASS, owner "jelek banget".)
+
 ## The Liveliness Gate
 
-Passing R1–R14 is necessary. It is not sufficient.
+Passing R1–R14 — and R15–R18 on a drawn subject — is necessary. It is not sufficient.
 
 - A page with **no owned asset** and **no purposeful motion** is
   a FAIL with the finding "clean, but dead" — however well it
@@ -225,6 +227,7 @@ Tests:      STRIP pass|fail — <what structure survives>
             SWAP pass|fail — <what breaks>
             SCREENSHOT pass|fail — <what dominates, desktop+mobile seen>
 Tier 1:     R1..R8 pass|fail each, one line of evidence per fail
+Tier 1d:    R15..R18 pass|fail each (drawn subjects only)
 Tier 2:     tells found: <list, or "none">
 Tier 3:     checked / not checked
 Liveliness: owned asset = <what> · motion = <what, or the recorded
