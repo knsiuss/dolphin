@@ -1,6 +1,6 @@
 ---
 name: dolphin-design
-description: The UI design law — a numbered filter with tiers and a mandatory PASS/FAIL delivery report, judged on rendered screenshots, never on source. Direction comes from the subject's material and a written reference brief; this skill supplies the filter, never the direction. Load in any session that builds or audits UI, alongside its role skill. Its R1–R18 are design rules local to this skill; pod behaviour is governed by the core's D-XX.
+description: The UI design law — a numbered filter with tiers and a mandatory PASS/FAIL delivery report, judged on rendered screenshots, never on source. Direction comes from the subject's material and a written reference brief; this skill supplies the filter, never the direction. Load in any session that builds or audits UI, alongside its role skill. Its R1–R21 are design rules local to this skill; pod behaviour is governed by the core's D-XX.
 disable-model-invocation: false
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash, Task
 ---
@@ -17,7 +17,7 @@ and gated below (the Liveliness Gate), because it has happened here.
 
 Load `dolphin-protocol` (the core) first. Its rules bind you —
 D-01 above all, D-02 (judge the render, never the source), D-03
-(no slop). This skill's R1–R18 below are the design filter; they
+(no slop). This skill's R1–R21 below are the design filter; they
 supplement the core's Return Gate, never replace it.
 
 ## Gate 0 — the reference brief (no brief, no code)
@@ -46,20 +46,9 @@ supplement the core's Return Gate, never replace it.
 
 ## The three tests (they outrank every checklist)
 
-1. **Strip test.** Mentally delete every label, badge, figure
-   number, caption, and class name. If the remaining structure —
-   section order, proportions, mass, rhythm — still reads as a
-   generic page of its genre, there is no design, only decoration.
-   A signature must live in the structure.
-2. **Swap test.** Replace the subject's name, photo, and content
-   with another person's. If the design still works, it is a
-   template. A real design breaks under swapped content, because
-   it was built *from* this content and no other.
-3. **Screenshot test.** Design is judged on rendered screenshots —
-   desktop and mobile widths — never on source code. Squint: one
-   mass must dominate and the hierarchy must survive. Shrink to a
-   thumbnail: it must still not look like the genre default. An
-   audit performed without looking at a rendering is void.
+1. **Strip test.** Mentally delete every label, badge, figure number, caption, and class name. If the remaining structure — section order, proportions, mass, rhythm — still reads as a generic page of its genre, there is no design, only decoration. A signature must live in the structure.
+2. **Swap test.** Replace the subject's name, photo, and content with another person's. If the design still works, it is a template. A real design breaks under swapped content, because it was built *from* this content and no other.
+3. **Screenshot test.** Design is judged on rendered screenshots — desktop and mobile widths — never on source code. Squint: one mass must dominate and the hierarchy must survive. Shrink to a thumbnail: it must still not look like the genre default. An audit performed without looking at a rendering is void.
 
 ## Concept provenance: from the subject, not from a reference
 
@@ -156,15 +145,19 @@ slop; the only rebuttal is structure (the three tests, shown).
   appears nowhere else.
 
 ### Tier 1 for drawn subjects — hard rules. Any one failure fails the gate.
-On a drawn subject (creature, character, scene — any pictorial artwork) these four are Tier 1, not tells. Two bench drawings (red panda, pelican — 21 Nov 2026) passed every rule above and were rejected by the owner on sight; in both runs the judge had filed exactly these flaws as non-blocking. A PASS that lists any of them as a non-blocking observation is void — the owner's eye reads these first, so the gate does too.
+On a drawn subject (creature, character, scene — any pictorial artwork) these seven are Tier 1, not tells. Three bench drawings (red panda, pelican, pelican-bike — 21 Nov 2026) passed every rule above and were rejected by the owner on sight; in the first two runs the judge had filed exactly these flaws as non-blocking. A PASS that lists any of them as a non-blocking observation is void — the owner's eye reads these first, so the gate does too.
 - **R15 · Markings follow the form.** Any band, stripe, ring, or patch on a curved form curves with it; a straight-edged band across a curved tail or body reads as tape and fails. (Red panda: trapezoid tail bands.)
 - **R16 · Nothing floats.** Every element joins the silhouette or another element; a hovering halo or patch reads as a sticker and fails. (Red panda: detached ear halos. Pelican: isolated eye-patch disc.)
 - **R17 · Eyes read alive.** Eyes are open with a highlight unless the brief specifies sleep or rest; half-lidded or highlight-less eyes read as dead and fail. (Red panda: the owner's first-named flaw.)
 - **R18 · The gesture survives.** The subject's defining gesture (a pelican's S-neck, a tail's curl) still reads at thumbnail size; collapsed into a hump, pocket, or blob, the screenshot test fails however many markers are present. (Pelican: judge PASS, owner "jelek banget".)
+- **R19 · Silhouette before detail.** The builder renders a one-colour silhouette pass first and checks it against the brief's observable proof; if the silhouette does not name the subject and its action, detail and colour are forbidden until it does. Detail on a dead silhouette is decoration on a failed drawing. (Pelican-bike: every marker present, the silhouette still a blob mounted on a frame.)
+- **R20 · Proportions come from the subject.** The brief states 2–3 proportion anchors from the real subject (bill vs head, body vs leg, wheel vs frame) and the screenshot test checks the render against them. Default "cute" proportions — balloon body, stub limbs, column neck — are the illustration centroid and fail R3 on a drawn subject. (All three benches: balloon bodies and column necks the owner read instantly as generic mascot.)
+- **R21 · One gesture line.** An action subject hangs on one dominant gesture line — the pedalling lean, the neck's sweep — established in the silhouette pass and visible in the final render. A bolt-upright specimen pose on an action subject fails however correct its parts. (Pelican-bike: a museum-posture bird on a moving bicycle.)
+On a drawn subject the judge must also name the weakest load-bearing form in the Delivery Report (neck, wing, legs, the action limb). If it is one the subject stands on, PASS is unavailable: the piece returns as a fix wave — at most two — then it goes to the owner with the render, verdict still open.
 
 ## The Liveliness Gate
 
-Passing R1–R14 — and R15–R18 on a drawn subject — is necessary. It is not sufficient.
+Passing R1–R14 — and R15–R21 on a drawn subject — is necessary. It is not sufficient.
 
 - A page with **no owned asset** and **no purposeful motion** is
   a FAIL with the finding "clean, but dead" — however well it
@@ -227,7 +220,7 @@ Tests:      STRIP pass|fail — <what structure survives>
             SWAP pass|fail — <what breaks>
             SCREENSHOT pass|fail — <what dominates, desktop+mobile seen>
 Tier 1:     R1..R8 pass|fail each, one line of evidence per fail
-Tier 1d:    R15..R18 pass|fail each (drawn subjects only)
+Tier 1d:    R15..R21 pass|fail each (drawn subjects only)
 Tier 2:     tells found: <list, or "none">
 Tier 3:     checked / not checked
 Liveliness: owned asset = <what> · motion = <what, or the recorded

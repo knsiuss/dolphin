@@ -431,6 +431,25 @@ at thumbnail — and a PASS that lists any of them as a
 non-blocking tell is void. The Delivery Report gains a Tier 1d
 line so the four are answered on every drawn artefact.
 
+### v4.1.8 — silhouette, proportions, gesture (21 Nov 2026)
+
+The same evening, a third bench (pelican on a bicycle, the
+classic hard case) passed v4.1.7 clean — R15–R18 all answered,
+contact points crop-verified — and the owner still rejected it
+on sight: "jelek banget". The ruled flaws were gone; what
+remained was deeper. The silhouette was a blob on a frame, the
+proportions were the generic mascot default (balloon body,
+column neck), and an action subject stood in a museum pose.
+dolphin-design gains R19–R21, still Tier 1 for drawn subjects:
+silhouette before detail (a one-colour pass must name the
+subject and its action before colour is allowed), proportions
+anchored to the real subject and checked on the render, and one
+dominant gesture line for action subjects. The judge must now
+also name the weakest load-bearing form in the Delivery Report;
+if the subject stands on it, PASS is unavailable — the piece
+returns as a fix wave (at most two), then goes to the owner with
+the render, verdict still open.
+
 ## Layout
 
 ```
